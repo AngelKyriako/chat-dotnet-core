@@ -18,10 +18,6 @@ namespace ChatApp.Auth {
 
     /// <summary>
     /// Handles Authentication & Authorization of the application via Json Web Tokens.
-    /// 
-    /// More info on policies and claims:
-    /// part 1: https://channel9.msdn.com/Blogs/Seth-Juarez/ASPNET-Core-Authorization-with-Barry-Dorrans
-    /// part 2: https://channel9.msdn.com/Blogs/Seth-Juarez/Advanced-aspNET-Core-Authorization-with-Barry-Dorrans
     /// </summary>
     /// <typeparam name="K"></typeparam>
     public class JwtAuthService<K> : IAuthService {

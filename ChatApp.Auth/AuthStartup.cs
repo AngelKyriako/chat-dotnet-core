@@ -10,11 +10,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ChatApp.Auth.Configuration {
-    
+
     /// <summary>
     /// Includes Any Authentication and Authorization constants and
     /// middleware static methods to be called in the Startup script
     /// of an dotnet code MVC app.
+    /// 
+    /// More info on policies and claims:
+    /// repo: https://github.com/blowdart/AspNetAuthorizationWorkshop
+    /// goblin part 1: https://channel9.msdn.com/Blogs/Seth-Juarez/ASPNET-Core-Authorization-with-Barry-Dorrans
+    /// goblin part 2: https://channel9.msdn.com/Blogs/Seth-Juarez/Advanced-aspNET-Core-Authorization-with-Barry-Dorrans
     /// </summary>
     public static class AuthStartup {
 
