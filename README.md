@@ -14,7 +14,7 @@ From there it is possible to test out certain requests.
 
 ## Authentication
 ```
-POST /v1/auth/
+POST /api/v1/auth/
 ```
 No parameters are required. The second time you should get the JWT data.
 
@@ -25,10 +25,10 @@ Authorization Bearer somebigggggggggggggggggtoken
 
 ## Test Authentication
 ```
-GET /v1/user
+GET /api/v1/user
 ```
 
 ## Test Authorization
 ```
-GET /v1/message
+GET /api/v1/message
 ```
