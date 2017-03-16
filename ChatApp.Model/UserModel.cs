@@ -1,9 +1,14 @@
-﻿namespace ChatApp.Model {
+﻿using Newtonsoft.Json;
+
+namespace ChatApp.Model {
 
     public class UserModel : BaseModel {
 
         public string Username { get; set; }
 
+        public string Password { get; set; }
+
+        [JsonIgnore]
         public string PasswordHash { get; set; }
 
         public string Firstname { get; set; }

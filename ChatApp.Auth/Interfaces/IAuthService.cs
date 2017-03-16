@@ -7,12 +7,15 @@ namespace ChatApp.Auth {
 
     public interface IAuthService {
 
+        ICryptoMan Crypto { get; }
+
         string Issuer { get; }
 
         string Audience { get; }
 
         SymmetricSecurityKey SigningKey { get; }
 
-        Task<JwtTokenModel> IssueToken(string username, string password);
+        Task<UserAndToken> IssueToken(string username, string password);
+        Task<UserAndToken> IssueToken(UserModel user, string password);
     }
 }

@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,6 @@ namespace ChatApp.Web {
     using Auth;
     using Auth.Configuration;
     using Service;
-    using Microsoft.AspNetCore.Mvc.Authorization;
 
     public class Startup {
 
@@ -79,6 +79,7 @@ namespace ChatApp.Web {
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
             services.AddSingleton<IAuthService, JwtAuthService>();
+            services.AddSingleton<ICryptoMan, CryptoMan>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IUserService, UserService>();
         }
@@ -121,7 +122,7 @@ namespace ChatApp.Web {
             });
 
             services.AddMvc(config => {
-                //config.Filters.Add(new AuthorizeFilter(AuthStartup.DefaultPolicy));
+                config.Filters.Add(new AuthorizeFilter(AuthStartup.DefaultPolicy));
             });
             ConfigureInjectedServices(services);
         }

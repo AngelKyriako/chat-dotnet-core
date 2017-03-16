@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
@@ -9,38 +10,38 @@ namespace ChatApp.Web.Controllers {
     [Route("api/v{version:apiVersion}/message")]
     public class MessageController : Controller {
 
-        private IMessageService service;
+        private IMessageService _messages;
 
-        public MessageController(IMessageService s) {
-            service = s;
+        public MessageController(IMessageService messages) {
+            _messages = messages;
         }
 
         [HttpGet]
         [Authorize(Policy = "RegularUser")]
         public IEnumerable<MessageModel> Get() {
-            return service.GetEnabled();
+            return _messages.GetEnabled();
         }
 
         [HttpGet("{id}")]
         public MessageModel Get(string id) {
-            return service.GetOneEnabled(id);
+            return _messages.GetOneEnabled(id);
         }
 
         [HttpPost]
         public MessageModel Post([FromBody]MessageModel body) {
-            MessageModel createdModel = service.Create(body);
-            return service.GetOneEnabled(createdModel.Id);
+            MessageModel createdModel = _messages.Create(body);
+            return _messages.GetOneEnabled(createdModel.Id);
         }
 
         [HttpPut("{id}")]
         public MessageModel Put(string id, [FromBody]MessageModel body) {
-            service.Update(id, body);
-            return service.GetOneEnabled(id);
+            _messages.Update(id, body);
+            return _messages.GetOneEnabled(id);
         }
 
         [HttpDelete("{id}")]
         public void Delete(string id) {
-            service.Disable(id);
+            _messages.Disable(id);
         }
     }
 }

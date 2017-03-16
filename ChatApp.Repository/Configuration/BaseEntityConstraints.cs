@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
 namespace ChatApp.Repository.Configuration {
-
     using Model;
 
     public class DateTimeNowGenerator : ValueGenerator {

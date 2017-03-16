@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ChatApp.Auth {
-
     using Configuration;
     using Model;
     using Repository;
@@ -21,17 +20,21 @@ namespace ChatApp.Auth {
     /// </summary>
     public class JwtAuthService : IAuthService {
 
-        private readonly ILogger _logger;
-        private readonly IUserRepository _userRepo;
-        private readonly JwtConfiguration _config;
-        private readonly SymmetricSecurityKey _signingKey;
+        private ILogger _logger;
+        private IUserRepository _users;
+        private JwtConfiguration _config;
+        private SymmetricSecurityKey _signingKey;
+
+        public ICryptoMan Crypto { get; private set; }
 
         public JwtAuthService(ILoggerFactory loggerFactory, IOptions<JwtConfiguration> config,
-                              IUserRepository userRepo) {
+                              IUserRepository users, ICryptoMan crypto) {
 
             _logger = loggerFactory.CreateLogger<JwtAuthService>();
             _config = config.Value;
-            _userRepo = userRepo;
+            _users = users;
+
+            Crypto = crypto;
 
             _logger.LogInformation("Generating signing credentials with " + _config.Algorithm);
             _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config.Secret));
@@ -78,20 +81,14 @@ namespace ChatApp.Auth {
         public SymmetricSecurityKey SigningKey { get { return _signingKey; } }
 
         //TODO: Fix JWT authorization. :/
-        public async Task<JwtTokenModel> IssueToken(string username, string password) {
-            UserModel user = _userRepo.GetOneByUsername(username);
-            if (user == null) { // _userRepo.IsValidAuthentication(user, password)
-                _userRepo.CreateAndCommit(new UserModel {
-                    Username = username,
-                    Firstname = username,
-                    Lastname = "Swag"
-                });
-                throw new ArgumentException($"Invalid username ({username}) or password ({password})");
+        public async Task<UserAndToken> IssueToken(UserModel user, string password) {
+            if (user == null || password == null || !Crypto.HashEqualsString(user.PasswordHash, password)) {
+                throw new ArgumentException($"Invalid username or password");
             }
             string jti = await _config.JtiGenerator();
 
             List<Claim> claims = new List<Claim> {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, jti),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_config.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
@@ -135,10 +132,19 @@ namespace ChatApp.Auth {
             #endregion
 
             // Export to a model ready for the consumer
-            return new JwtTokenModel() {
+            JwtToken token = new JwtToken() {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(jwt),
                 ExpiresInSeconds = (int)_config.ValidFor.TotalSeconds
             };
+
+            return new UserAndToken() {
+                User = user,
+                Token = token
+            };
+        }
+
+        public async Task<UserAndToken> IssueToken(string username, string password) {
+            return await IssueToken(_users.GetOneByUsername(username), password);
         }
     }
 }

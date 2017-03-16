@@ -1,8 +1,6 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 
 namespace ChatApp.Repository {
-
     using Configuration;
     using Model;
 

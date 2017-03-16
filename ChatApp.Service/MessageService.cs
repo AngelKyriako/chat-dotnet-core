@@ -1,5 +1,4 @@
 ﻿namespace ChatApp.Service {
-
     using Model;
     using Repository;
 

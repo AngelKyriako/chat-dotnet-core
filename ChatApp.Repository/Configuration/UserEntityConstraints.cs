@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChatApp.Repository.Configuration {
-
     using Model;
 
     public class UserEntityConstraints {
@@ -12,6 +11,8 @@ namespace ChatApp.Repository.Configuration {
                 .IsRequired()
                 .HasMaxLength(128)
                 .IsUnicode(true);
+
+            builder.Ignore(e => e.Password);
 
             builder.Property(e => e.Firstname)
                 .HasMaxLength(128)

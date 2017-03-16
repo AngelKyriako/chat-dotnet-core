@@ -1,6 +1,7 @@
-﻿namespace ChatApp.Repository {
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ChatApp.Repository {
     using Model;
 
     public class MongoRepository<M> : IRepository<M> where M : BaseModel {

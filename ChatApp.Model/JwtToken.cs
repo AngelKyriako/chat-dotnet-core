@@ -1,6 +1,6 @@
 ﻿namespace ChatApp.Model {
 
-    public class JwtTokenModel {
+    public class JwtToken {
 
         public string AccessToken { get; set; }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Repository.Configuration {
-
     using Model;
 
     public class EntityContext : DbContext {

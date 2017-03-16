@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Repository {
-
     using Configuration;
     using Model;
 

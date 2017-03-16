@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChatApp.Repository.Configuration {
-
     using Model;
 
     public class MessageEntityConstraints {
