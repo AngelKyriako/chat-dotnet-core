@@ -3,26 +3,26 @@
     using Model;
     using Repository;
 
-    public class UserService<K> : CRUDService<UserModel<K>, K>, IUserService<K> {
+    public class UserService : CRUDService<UserModel>, IUserService {
 
-        private IUserRepository<K> _repo;
-        public UserService(IUserRepository<K> repo) : base(repo) {
+        private IUserRepository _repo;
+        public UserService(IUserRepository repo) : base(repo) {
             _repo = repo;
         }
 
-        public UserModel<K> GetOneByUsername(string username) {
+        public UserModel GetOneByUsername(string username) {
             return _repo.GetOneByUsername(username);
         }
 
-        public UserModel<K> GetOneDisabledByUsername(string username) {
+        public UserModel GetOneDisabledByUsername(string username) {
             return _repo.GetOneEnabledByUsername(username);
         }
 
-        public UserModel<K> GetOneEnabledByUsername(string username) {
+        public UserModel GetOneEnabledByUsername(string username) {
             return _repo.GetOneDisabledByUsername(username);
         }
 
-        public bool IsValidAuthentication(UserModel<K> user, string password) {
+        public bool IsValidAuthentication(UserModel user, string password) {
             //TODO: 
             return true;
         }
@@ -32,12 +32,14 @@
             return true;
         }
 
-        public override void Update(K id, UserModel<K> model) {
-            UserModel<K> user = GetOneEnabled(id);
+        public override UserModel Update(string id, UserModel model) {
+            UserModel user = GetOneEnabled(id);
             if (user != null) {
                 user.Copy(model);
             }
             _repo.Commit();
+
+            return user;
         }
 
     }

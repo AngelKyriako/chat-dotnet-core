@@ -7,11 +7,11 @@ namespace ChatApp.Repository {
     using Configuration;
     using Model;
 
-    public class MessageRepository<K> : EntityRepository<MessageModel<K>, K>, IMessageRepository<K> {
+    public class MessageRepository : EntityRepository<MessageModel>, IMessageRepository {
 
-        public MessageRepository(AppEntityContext<K> context) : base(context) { }
+        public MessageRepository(EntityContext context) : base(context) { }
 
-        public override IEnumerable<MessageModel<K>> Get(int page, int limit) {
+        public override IEnumerable<MessageModel> Get(int page, int limit) {
             return _entities
                 .Skip(page * limit)
                 .Take(limit)
@@ -19,7 +19,7 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public override IEnumerable<MessageModel<K>> GetEnabled(int page, int limit) {
+        public override IEnumerable<MessageModel> GetEnabled(int page, int limit) {
             return _entities
                 .Where(e => e.Enabled)
                 .Skip(page * limit)
@@ -28,7 +28,7 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public override IEnumerable<MessageModel<K>> GetDisabled(int page, int limit) {
+        public override IEnumerable<MessageModel> GetDisabled(int page, int limit) {
             return _entities
                 .Where(e => !e.Enabled)
                 .Skip(page * limit)
@@ -37,14 +37,14 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public override MessageModel<K> GetOne(K id) {
+        public override MessageModel GetOne(string id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Include(e => e.Creator)
                 .FirstOrDefault();
         }
 
-        public override MessageModel<K> GetOneEnabled(K id) {
+        public override MessageModel GetOneEnabled(string id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Where(e => e.Enabled)
@@ -52,7 +52,7 @@ namespace ChatApp.Repository {
                 .FirstOrDefault();
         }
 
-        public override MessageModel<K> GetOneDisabled(K id) {
+        public override MessageModel GetOneDisabled(string id) {
             return _entities
                 .Where(e => !e.Id.Equals(id))
                 .Where(e => e.Enabled)

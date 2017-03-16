@@ -3,16 +3,16 @@
     using System.Collections.Generic;
     using Model;
 
-    public class MongoRepository<M> : IRepository<M, string> where M : BaseModel<string> {
+    public class MongoRepository<M> : IRepository<M> where M : BaseModel {
         public void Commit() {
             throw new NotImplementedException();
         }
 
-        public void Create(M model) {
+        public M Create(M model) {
             throw new NotImplementedException();
         }
 
-        public void CreateAndCommit(M model) {
+        public M CreateAndCommit(M model) {
             throw new NotImplementedException();
         }
 

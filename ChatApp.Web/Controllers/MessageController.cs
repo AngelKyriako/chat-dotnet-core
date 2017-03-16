@@ -7,39 +7,39 @@ namespace ChatApp.Web.Controllers {
     using Service;
 
     [Route("api/v{version:apiVersion}/message")]
-    public class MessageController<K> : Controller {
+    public class MessageController : Controller {
 
-        private IMessageService<K> service;
+        private IMessageService service;
 
-        public MessageController(IMessageService<K> s) {
+        public MessageController(IMessageService s) {
             service = s;
         }
 
         [HttpGet]
         [Authorize(Policy = "RegularUser")]
-        public IEnumerable<MessageModel<K>> Get() {
+        public IEnumerable<MessageModel> Get() {
             return service.GetEnabled();
         }
 
         [HttpGet("{id}")]
-        public MessageModel<K> Get(K id) {
+        public MessageModel Get(string id) {
             return service.GetOneEnabled(id);
         }
 
         [HttpPost]
-        public MessageModel<K> Post([FromBody]MessageModel<K> body) {
-            service.Create(body);
-            return service.GetOneEnabled(body.Id);
+        public MessageModel Post([FromBody]MessageModel body) {
+            MessageModel createdModel = service.Create(body);
+            return service.GetOneEnabled(createdModel.Id);
         }
 
         [HttpPut("{id}")]
-        public MessageModel<K> Put(K id, [FromBody]MessageModel<K> body) {
+        public MessageModel Put(string id, [FromBody]MessageModel body) {
             service.Update(id, body);
-            return service.GetOneEnabled(body.Id);
+            return service.GetOneEnabled(id);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(K id) {
+        public void Delete(string id) {
             service.Disable(id);
         }
     }

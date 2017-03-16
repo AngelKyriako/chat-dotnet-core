@@ -2,12 +2,12 @@
 
     using Model;
 
-    public interface IUserService<K> : ICRUDService<UserModel<K>, K> {
-        UserModel<K> GetOneByUsername(string username);
-        UserModel<K> GetOneEnabledByUsername(string username);
-        UserModel<K> GetOneDisabledByUsername(string username);
+    public interface IUserService: ICRUDService<UserModel> {
+        UserModel GetOneByUsername(string username);
+        UserModel GetOneEnabledByUsername(string username);
+        UserModel GetOneDisabledByUsername(string username);
 
-        bool IsValidAuthentication(UserModel<K> user, string password);
+        bool IsValidAuthentication(UserModel user, string password);
         bool IsValidAuthentication(string username, string password);
     }
 }

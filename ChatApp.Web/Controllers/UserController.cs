@@ -7,38 +7,36 @@ namespace ChatApp.Web.Controllers {
     using Service;
 
     [Route("api/v{version:apiVersion}/user")]
-    public class UserController<K> : Controller {
+    public class UserController : Controller {
 
-        private IUserService<K> service;
+        private IUserService service;
 
-        public UserController(IUserService<K> s) {
+        public UserController(IUserService s) {
             service = s;
         }
 
         [HttpGet]
-        public IEnumerable<UserModel<K>> Get() {
+        public IEnumerable<UserModel> Get() {
             return service.GetEnabled();
         }
 
         [HttpGet("{id}")]
-        public UserModel<K> Get(K id) {
+        public UserModel Get(string id) {
             return service.GetOneEnabled(id);
         }
 
         [HttpPost]
-        public UserModel<K> Post([FromBody]UserModel<K> body) {
-            service.Create(body);
-            return body;
+        public UserModel Post([FromBody]UserModel body) {
+            return service.Create(body);
         }
 
         [HttpPut("{id}")]
-        public UserModel<K> Put(K id, [FromBody]UserModel<K> body) {
-            service.Update(id, body);
-            return body;
+        public UserModel Put(string id, [FromBody]UserModel body) {
+            return service.Update(id, body);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(K id) {
+        public void Delete(string id) {
             service.Disable(id);
         }
     }

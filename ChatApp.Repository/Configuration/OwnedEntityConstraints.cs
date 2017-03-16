@@ -4,11 +4,15 @@ namespace ChatApp.Repository.Configuration {
 
     using Model;
 
-    public class OwnedEntityConstraints<K> {
-        public OwnedEntityConstraints(EntityTypeBuilder<OwnedModel<K>> builder) {
+    public class OwnedEntityConstraints {
+
+        public OwnedEntityConstraints(EntityTypeBuilder<OwnedModel> builder) {
+
+            builder.Ignore(e => e.CreatorId);
+
             builder.HasOne(e => e.Creator)
                 .WithMany()
-                .HasForeignKey(e => e.CreatorId);
+                .HasForeignKey(e => e.CreatorKey);
         }
     }
 }

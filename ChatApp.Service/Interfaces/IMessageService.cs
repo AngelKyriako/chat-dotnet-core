@@ -2,6 +2,6 @@
 
     using Model;
 
-    public interface IMessageService<K> : ICRUDService<MessageModel<K>, K> {
+    public interface IMessageService : ICRUDService<MessageModel> {
     }
 }

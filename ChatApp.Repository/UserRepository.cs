@@ -2,27 +2,28 @@
 using System.Linq;
 
 namespace ChatApp.Repository {
+
     using Configuration;
     using Model;
 
-    public class UserRepository<K> : EntityRepository<UserModel<K>, K>, IUserRepository<K> {
+    public class UserRepository : EntityRepository<UserModel>, IUserRepository {
 
-        public UserRepository(AppEntityContext<K> context) : base(context) { }
+        public UserRepository(EntityContext context) : base(context) { }
 
-        public UserModel<K> GetOneByUsername(string username) {
+        public UserModel GetOneByUsername(string username) {
             return _entities
                 .Where(e => e.Username.Equals(username))
                 .FirstOrDefault();
         }
 
-        public UserModel<K> GetOneDisabledByUsername(string username) {
+        public UserModel GetOneDisabledByUsername(string username) {
             return _entities
                 .Where(e => e.Username.Equals(username))
                 .Where(e => !e.Enabled)
                 .FirstOrDefault();
         }
 
-        public UserModel<K> GetOneEnabledByUsername(string username) {
+        public UserModel GetOneEnabledByUsername(string username) {
             return _entities
                 .Where(e => e.Username.Equals(username))
                 .Where(e => e.Enabled)

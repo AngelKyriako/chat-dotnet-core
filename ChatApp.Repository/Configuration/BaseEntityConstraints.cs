@@ -23,10 +23,12 @@ namespace ChatApp.Repository.Configuration {
         }
     }
 
-    public class BaseEntityConstraints<K> {
+    public class BaseEntityConstraints {
 
-        public BaseEntityConstraints(EntityTypeBuilder<BaseModel<K>> builder) {
-            builder.HasKey(e => e.Id);
+        public BaseEntityConstraints(EntityTypeBuilder<BaseModel> builder) {
+            builder.HasKey(e => e.Key);
+
+            builder.Ignore(e => e.Id);
 
             builder.Property(e => e.CreatedAt)
                 //.HasValueGenerator<DateTimeNowGenerator>()
@@ -38,7 +40,6 @@ namespace ChatApp.Repository.Configuration {
             builder.Property(e => e.Enabled)
                 .HasValueGenerator<BoolTrueGenerator>()
                 .ValueGeneratedOnAdd();
-
         }
     }
 }

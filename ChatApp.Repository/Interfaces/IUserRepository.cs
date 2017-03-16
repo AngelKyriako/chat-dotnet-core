@@ -1,10 +1,10 @@
 ﻿namespace ChatApp.Repository {
     using Model;
 
-    public interface IUserRepository<K> : IRepository<UserModel<K>, K> {
+    public interface IUserRepository : IRepository<UserModel> {
 
-        UserModel<K> GetOneByUsername(string username);
-        UserModel<K> GetOneEnabledByUsername(string username);
-        UserModel<K> GetOneDisabledByUsername(string username);
+        UserModel GetOneByUsername(string username);
+        UserModel GetOneEnabledByUsername(string username);
+        UserModel GetOneDisabledByUsername(string username);
     }
 }

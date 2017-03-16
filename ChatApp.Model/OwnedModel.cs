@@ -1,7 +1,23 @@
-﻿namespace ChatApp.Model {
+﻿using System;
+
+using Newtonsoft.Json;
+
+namespace ChatApp.Model {
     
-    public class OwnedModel<K> : BaseModel<K> {
-        public K CreatorId { get; set; }
-        public UserModel<K> Creator { get; set; }
+    public class OwnedModel : BaseModel {
+        [JsonIgnore]
+        public long CreatorKey { get; set; }
+
+        public string CreatorId {
+            get { return CreatorKey.ToString(); }
+            set {
+                try {
+                    CreatorKey = long.Parse(value);
+                } catch(Exception) {
+                    CreatorKey = 0;
+                }
+            }
+        }
+        public UserModel Creator { get; set; }
     }
 }

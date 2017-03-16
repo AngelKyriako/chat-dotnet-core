@@ -2,30 +2,27 @@
 
 namespace ChatApp.Service {
     
-    public interface ICRUDService<E, K> {
+    public interface ICRUDService<M> {
 
-        IEnumerable<E> Get(int page = 0, int limit = 100);
-        IEnumerable<E> GetEnabled(int page = 0, int limit = 100);
-        IEnumerable<E> GetDisabled(int page = 0, int limit = 100);
+        IEnumerable<M> Get(int page = 0, int limit = 100);
+        IEnumerable<M> GetEnabled(int page = 0, int limit = 100);
+        IEnumerable<M> GetDisabled(int page = 0, int limit = 100);
+        
+        M GetOne(string id);
+        M GetOneEnabled(string id);
+        M GetOneDisabled(string id);
 
-        E GetOne(K id);
-        E GetOne(string id);
-        E GetOneEnabled(K id);
-        E GetOneEnabled(string id);
-        E GetOneDisabled(K id);
-        E GetOneDisabled(string id);
+        M Create(M model);
 
-        void Create(E model);
+        M Update(string id, M model);
 
-        void Update(K id, E model);
+        void Delete(string id);
+        void Delete(M model);
 
-        void Delete(K id);
-        void Delete(E model);
+        void Disable(string id);
+        void Disable(M model);
 
-        void Disable(K id);
-        void Disable(E model);
-
-        void Enable(K id);
-        void Enable(E model);
+        void Enable(string id);
+        void Enable(M model);
     }
 }

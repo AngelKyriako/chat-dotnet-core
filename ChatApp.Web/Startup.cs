@@ -54,12 +54,9 @@ namespace ChatApp.Web {
         /// 
         /// More info: https://www.exceptionnotfound.net/getting-started-with-dependency-injection-in-asp-net-core/
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="C">DB Context</typeparam>
         /// <param name="services"></param>
-        protected void ConfigureInjectedServices<C, K>(IServiceCollection services)
-            where C : DbContext
-            where K : new() {
+        protected void ConfigureInjectedServices(IServiceCollection services) {
 
             IConfigurationSection database = Configuration.GetSection("Database");
             string databaseType = database.GetValue<string>("Type");
@@ -67,23 +64,23 @@ namespace ChatApp.Web {
             switch (databaseType) {
                 case "MsSql":
                     //TODO: setup mssql
-                    services.AddDbContext<C>(opt => opt.UseSqlServer(uri.GetValue<string>(databaseType)));
+                    services.AddDbContext<EntityContext>(opt => opt.UseSqlServer(uri.GetValue<string>(databaseType)));
                     break;
                 case "Mongo":
-                // TODO: setup mongo & code repository with mongo driver
+                    // TODO: setup mongo & code repository with mongo driver
                 case "Memory":
                 default:
-                    services.AddDbContext<C>(opt => opt.UseInMemoryDatabase());
+                    services.AddDbContext<EntityContext>(opt => opt.UseInMemoryDatabase());
                     break;
             }
             Console.WriteLine("Startup with " + databaseType + " database.");
 
-            services.AddScoped(typeof(IMessageRepository<K>), typeof(MessageRepository<K>));
-            services.AddScoped(typeof(IUserRepository<K>), typeof(UserRepository<K>));
+            services.AddScoped(typeof(IMessageRepository), typeof(MessageRepository));
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
-            services.AddSingleton<IAuthService, JwtAuthService<K>>();
-            services.AddTransient<IMessageService<K>, MessageService<K>>();
-            services.AddTransient<IUserService<K>, UserService<K>>();
+            services.AddSingleton<IAuthService, JwtAuthService>();
+            services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         /// <summary>
@@ -124,9 +121,9 @@ namespace ChatApp.Web {
             });
 
             services.AddMvc(config => {
-                config.Filters.Add(new AuthorizeFilter(AuthStartup.DefaultPolicy));
+                //config.Filters.Add(new AuthorizeFilter(AuthStartup.DefaultPolicy));
             });
-            ConfigureInjectedServices<AppEntityContext<long>, long>(services);
+            ConfigureInjectedServices(services);
         }
 
         /// <summary>

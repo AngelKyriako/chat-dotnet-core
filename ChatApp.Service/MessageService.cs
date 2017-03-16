@@ -3,19 +3,21 @@
     using Model;
     using Repository;
 
-    public class MessageService<K> : CRUDService<MessageModel<K>, K>, IMessageService<K> {
+    public class MessageService : CRUDService<MessageModel>, IMessageService {
 
-        private IMessageRepository<K> _repo;
-        public MessageService(IMessageRepository<K> repo): base(repo) {
+        private IMessageRepository _repo;
+        public MessageService(IMessageRepository repo): base(repo) {
             _repo = repo;
         }
 
-        public override void Update(K id, MessageModel<K> model) {
-            MessageModel<K> user = GetOneEnabled(id);
-            if (user != null) {
-                user.Copy(model);
+        public override MessageModel Update(string id, MessageModel model) {
+            MessageModel message = GetOneEnabled(id);
+            if (message != null) {
+                message.Copy(model);
             }
             _repo.Commit();
+
+            return message;
         }
 
     }

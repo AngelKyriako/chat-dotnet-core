@@ -9,14 +9,14 @@ namespace ChatApp.Repository {
     using Configuration;
     using Model;
 
-    public class EntityRepository<M, K> : IRepository<M, K> where M : BaseModel<K> {
+    public class EntityRepository<M> : IRepository<M> where M : BaseModel {
 
-        private readonly AppEntityContext<K> _context;
+        private readonly EntityContext _context;
         protected DbSet<M> _entities;
 
         protected string errorMessage = string.Empty;
 
-        public EntityRepository(AppEntityContext<K> context) {
+        public EntityRepository(EntityContext context) {
             _context = context;
             _entities = context.Set<M>();
         }
@@ -45,59 +45,33 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public virtual M GetOne(K id) {
+        public virtual M GetOne(string id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .FirstOrDefault();
         }
 
-        public virtual M GetOneEnabled(K id) {
+        public virtual M GetOneEnabled(string id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Where(e => e.Enabled)
                 .FirstOrDefault();
         }
 
-        public virtual M GetOneDisabled(K id) {
+        public virtual M GetOneDisabled(string id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Where(e => !e.Enabled)
                 .FirstOrDefault();
         }
 
-        public virtual M GetOne(string id) {
-            try {
-                return GetOne((K)Convert.ChangeType(id, typeof(K)));
-            } catch (Exception e) {
-                Console.WriteLine("Could not convert string id to long: " + e);
-                return null;
-            }
-        }
-
-        public virtual M GetOneEnabled(string id) {
-            try {
-                return GetOneEnabled((K)Convert.ChangeType(id, typeof(K)));
-            } catch (Exception e) {
-                Console.WriteLine("Could not convert string id to long: " + e);
-                return null;
-            }
-        }
-
-        public virtual M GetOneDisabled(string id) {
-            try {
-                return GetOneDisabled((K)Convert.ChangeType(id, typeof(K)));
-            } catch (Exception e) {
-                Console.WriteLine("Could not convert string id to long: " + e);
-                return null;
-            }
-        }
-
         // write
-        public virtual void Create(M model) {
+        public virtual M Create(M model) {
             if (model == null) {
                 throw new ArgumentNullException("model");
             }
             _entities.Add(model);
+            return model;
         }
 
         public virtual void Disable(M model) {
@@ -127,9 +101,10 @@ namespace ChatApp.Repository {
         }
 
         // write with auto commit
-        public virtual void CreateAndCommit(M model) {
+        public virtual M CreateAndCommit(M model) {
             Create(model);
             Commit();
+            return model;
         }
 
         public virtual void DisableAndCommit(M model) {

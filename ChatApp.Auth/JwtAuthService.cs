@@ -19,18 +19,17 @@ namespace ChatApp.Auth {
     /// <summary>
     /// Handles Authentication & Authorization of the application via Json Web Tokens.
     /// </summary>
-    /// <typeparam name="K"></typeparam>
-    public class JwtAuthService<K> : IAuthService {
+    public class JwtAuthService : IAuthService {
 
         private readonly ILogger _logger;
-        private readonly IUserRepository<K> _userRepo;
+        private readonly IUserRepository _userRepo;
         private readonly JwtConfiguration _config;
         private readonly SymmetricSecurityKey _signingKey;
 
         public JwtAuthService(ILoggerFactory loggerFactory, IOptions<JwtConfiguration> config,
-                              IUserRepository<K> userRepo) {
+                              IUserRepository userRepo) {
 
-            _logger = loggerFactory.CreateLogger<JwtAuthService<K>>();
+            _logger = loggerFactory.CreateLogger<JwtAuthService>();
             _config = config.Value;
             _userRepo = userRepo;
 
@@ -80,9 +79,9 @@ namespace ChatApp.Auth {
 
         //TODO: Fix JWT authorization. :/
         public async Task<JwtTokenModel> IssueToken(string username, string password) {
-            UserModel< K> user = _userRepo.GetOneByUsername(username);
+            UserModel user = _userRepo.GetOneByUsername(username);
             if (user == null) { // _userRepo.IsValidAuthentication(user, password)
-                _userRepo.CreateAndCommit(new UserModel<K> {
+                _userRepo.CreateAndCommit(new UserModel {
                     Username = username,
                     Firstname = username,
                     Lastname = "Swag"
