@@ -81,9 +81,9 @@ namespace ChatApp.Web {
             services.AddScoped(typeof(IMessageRepository<K>), typeof(MessageRepository<K>));
             services.AddScoped(typeof(IUserRepository<K>), typeof(UserRepository<K>));
 
+            services.AddSingleton<IAuthService, JwtAuthService<K>>();
             services.AddTransient<IMessageService<K>, MessageService<K>>();
             services.AddTransient<IUserService<K>, UserService<K>>();
-            services.AddSingleton<IAuthService, JwtAuthService<K>>();
         }
 
         /// <summary>

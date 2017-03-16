@@ -3,64 +3,64 @@
     using System.Collections.Generic;
     using Model;
 
-    public class MongoRepository<E> : IRepository<E, string> where E : BaseModel<string> {
+    public class MongoRepository<M> : IRepository<M, string> where M : BaseModel<string> {
         public void Commit() {
             throw new NotImplementedException();
         }
 
-        public void Create(E entity) {
+        public void Create(M model) {
             throw new NotImplementedException();
         }
 
-        public void CreateAndCommit(E entity) {
+        public void CreateAndCommit(M model) {
             throw new NotImplementedException();
         }
 
-        public void Delete(E entity) {
+        public void Delete(M model) {
             throw new NotImplementedException();
         }
 
-        public void DeleteAndCommit(E entity) {
+        public void DeleteAndCommit(M model) {
             throw new NotImplementedException();
         }
 
-        public void Disable(E entity) {
+        public void Disable(M model) {
             throw new NotImplementedException();
         }
 
-        public void DisableAndCommit(E entity) {
+        public void DisableAndCommit(M model) {
             throw new NotImplementedException();
         }
 
-        public void Enable(E entity) {
+        public void Enable(M model) {
             throw new NotImplementedException();
         }
 
-        public void EnableAndCommit(E entity) {
+        public void EnableAndCommit(M model) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<E> Get(int page = 0, int limit = 100) {
+        public IEnumerable<M> Get(int page = 0, int limit = 100) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<E> GetDisabled(int page = 0, int limit = 100) {
+        public IEnumerable<M> GetDisabled(int page = 0, int limit = 100) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<E> GetEnabled(int page = 0, int limit = 100) {
+        public IEnumerable<M> GetEnabled(int page = 0, int limit = 100) {
             throw new NotImplementedException();
         }
 
-        public E GetOne(string id) {
+        public M GetOne(string id) {
             throw new NotImplementedException();
         }
 
-        public E GetOneDisabled(string id) {
+        public M GetOneDisabled(string id) {
             throw new NotImplementedException();
         }
 
-        public E GetOneEnabled(string id) {
+        public M GetOneEnabled(string id) {
             throw new NotImplementedException();
         }
     }

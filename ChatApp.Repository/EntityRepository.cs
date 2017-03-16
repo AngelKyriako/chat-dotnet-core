@@ -9,27 +9,27 @@ namespace ChatApp.Repository {
     using Configuration;
     using Model;
 
-    public class EntityRepository<E, K> : IRepository<E, K> where E : BaseModel<K> {
+    public class EntityRepository<M, K> : IRepository<M, K> where M : BaseModel<K> {
 
         private readonly AppEntityContext<K> _context;
-        protected DbSet<E> _entities;
+        protected DbSet<M> _entities;
 
         protected string errorMessage = string.Empty;
 
         public EntityRepository(AppEntityContext<K> context) {
             _context = context;
-            _entities = context.Set<E>();
+            _entities = context.Set<M>();
         }
 
         // read
-        public virtual IEnumerable<E> Get(int page = 0, int limit = 100) {
+        public virtual IEnumerable<M> Get(int page = 0, int limit = 100) {
             return _entities
                 .Skip(page * limit)
                 .Take(limit)
                 .ToList();
         }
 
-        public virtual IEnumerable<E> GetEnabled(int page = 0, int limit = 100) {
+        public virtual IEnumerable<M> GetEnabled(int page = 0, int limit = 100) {
             return _entities
                 .Where(e => e.Enabled)
                 .Skip(page * limit)
@@ -37,7 +37,7 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public virtual IEnumerable<E> GetDisabled(int page = 0, int limit = 100) {
+        public virtual IEnumerable<M> GetDisabled(int page = 0, int limit = 100) {
             return _entities
                 .Where(e => !e.Enabled)
                 .Skip(page * limit)
@@ -45,27 +45,27 @@ namespace ChatApp.Repository {
                 .ToList();
         }
 
-        public virtual E GetOne(K id) {
+        public virtual M GetOne(K id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .FirstOrDefault();
         }
 
-        public virtual E GetOneEnabled(K id) {
+        public virtual M GetOneEnabled(K id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Where(e => e.Enabled)
                 .FirstOrDefault();
         }
 
-        public virtual E GetOneDisabled(K id) {
+        public virtual M GetOneDisabled(K id) {
             return _entities
                 .Where(e => e.Id.Equals(id))
                 .Where(e => !e.Enabled)
                 .FirstOrDefault();
         }
 
-        public virtual E GetOne(string id) {
+        public virtual M GetOne(string id) {
             try {
                 return GetOne((K)Convert.ChangeType(id, typeof(K)));
             } catch (Exception e) {
@@ -74,7 +74,7 @@ namespace ChatApp.Repository {
             }
         }
 
-        public virtual E GetOneEnabled(string id) {
+        public virtual M GetOneEnabled(string id) {
             try {
                 return GetOneEnabled((K)Convert.ChangeType(id, typeof(K)));
             } catch (Exception e) {
@@ -83,7 +83,7 @@ namespace ChatApp.Repository {
             }
         }
 
-        public virtual E GetOneDisabled(string id) {
+        public virtual M GetOneDisabled(string id) {
             try {
                 return GetOneDisabled((K)Convert.ChangeType(id, typeof(K)));
             } catch (Exception e) {
@@ -93,32 +93,32 @@ namespace ChatApp.Repository {
         }
 
         // write
-        public virtual void Create(E entity) {
-            if (entity == null) {
-                throw new ArgumentNullException("entity");
+        public virtual void Create(M model) {
+            if (model == null) {
+                throw new ArgumentNullException("model");
             }
-            _entities.Add(entity);
+            _entities.Add(model);
         }
 
-        public virtual void Disable(E entity) {
-            if (entity == null) {
-                throw new ArgumentNullException("entity");
+        public virtual void Disable(M model) {
+            if (model == null) {
+                throw new ArgumentNullException("model");
             }
-            entity.Enabled = false;
+            model.Enabled = false;
         }
 
-        public virtual void Enable(E entity) {
-            if (entity == null) {
-                throw new ArgumentNullException("entity");
+        public virtual void Enable(M model) {
+            if (model == null) {
+                throw new ArgumentNullException("model");
             }
-            entity.Enabled = true;
+            model.Enabled = true;
         }
 
-        public virtual void Delete(E entity) {
-            if (entity == null) {
-                throw new ArgumentNullException("entity");
+        public virtual void Delete(M model) {
+            if (model == null) {
+                throw new ArgumentNullException("model");
             }
-            _entities.Remove(entity);
+            _entities.Remove(model);
         }
 
         // commit 
@@ -127,23 +127,23 @@ namespace ChatApp.Repository {
         }
 
         // write with auto commit
-        public virtual void CreateAndCommit(E entity) {
-            Create(entity);
+        public virtual void CreateAndCommit(M model) {
+            Create(model);
             Commit();
         }
 
-        public virtual void DisableAndCommit(E entity) {
-            Disable(entity);
+        public virtual void DisableAndCommit(M model) {
+            Disable(model);
             Commit();
         }
 
-        public virtual void EnableAndCommit(E entity) {
-            Enable(entity);
+        public virtual void EnableAndCommit(M model) {
+            Enable(model);
             Commit();
         }
 
-        public virtual void DeleteAndCommit(E entity) {
-            Delete(entity);
+        public virtual void DeleteAndCommit(M model) {
+            Delete(model);
             Commit();
         }
     }

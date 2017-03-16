@@ -2,32 +2,32 @@
 
 namespace ChatApp.Repository {
 
-    public interface IRepository<E, K> {
+    public interface IRepository<M, K> {
         // read
-        IEnumerable<E> Get(int page = 0, int limit = 100);
-        IEnumerable<E> GetEnabled(int page = 0, int limit = 100);
-        IEnumerable<E> GetDisabled(int page = 0, int limit = 100);
+        IEnumerable<M> Get(int page = 0, int limit = 100);
+        IEnumerable<M> GetEnabled(int page = 0, int limit = 100);
+        IEnumerable<M> GetDisabled(int page = 0, int limit = 100);
 
-        E GetOne(K id);
-        E GetOne(string id);
-        E GetOneEnabled(K id);
-        E GetOneEnabled(string id);
-        E GetOneDisabled(K id);
-        E GetOneDisabled(string id);
+        M GetOne(K id);
+        M GetOne(string id);
+        M GetOneEnabled(K id);
+        M GetOneEnabled(string id);
+        M GetOneDisabled(K id);
+        M GetOneDisabled(string id);
 
         // write without commit
-        void Create(E entity);
-        void Delete(E entity);
-        void Disable(E entity);
-        void Enable(E entity);
+        void Create(M entity);
+        void Delete(M entity);
+        void Disable(M entity);
+        void Enable(M entity);
 
         // commit
         void Commit();
 
         // write with auto commit
-        void CreateAndCommit(E entity);
-        void DisableAndCommit(E entity);
-        void EnableAndCommit(E entity);
-        void DeleteAndCommit(E entity);
+        void CreateAndCommit(M entity);
+        void DisableAndCommit(M entity);
+        void EnableAndCommit(M entity);
+        void DeleteAndCommit(M entity);
     }
 }
