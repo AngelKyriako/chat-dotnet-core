@@ -20,7 +20,8 @@ namespace ChatApp.Service {
         }
 
         public override UserModel Create(UserModel model) {
-            model.PasswordHash = _auth.Crypto.Hash(model.Password);
+            model.PasswordSalt = _auth.Crypto.GenerateSalt();
+            model.PasswordHash = _auth.Crypto.HashWithSalt(model.Password, model.PasswordSalt);
             model.Password = null;
 
             if (model.Firstname == null) {

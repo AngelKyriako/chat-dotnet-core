@@ -19,16 +19,22 @@ namespace ChatApp.Auth {
             _config = config.Value;
         }
 
-        public string Hash(string str) {
-            if (str == null) {
-                throw new ArgumentNullException("undefined string value");
-            }
-
+        public byte[] GenerateSalt() {
             byte[] salt = new byte[128 / 8];
             using (var rng = RandomNumberGenerator.Create()) {
                 rng.GetBytes(salt);
             }
             _logger.LogDebug($"Salt: {Convert.ToBase64String(salt)}");
+            return salt;
+        }
+
+        public string HashWithSalt(string str, byte[] salt) {
+            if (str == null) {
+                throw new ArgumentNullException("undefined string value");
+            }
+            if (salt == null) {
+                throw new ArgumentNullException("undefined salt value");
+            }
 
             // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -40,13 +46,6 @@ namespace ChatApp.Auth {
             );
 
             return hashed;
-        }
-
-        public bool HashEqualsString(string hash, string str) {
-            if (hash == null) {
-                throw new ArgumentNullException("undefined hash value");
-            }
-            return hash.Equals(Hash(str));
         }
     }
 }

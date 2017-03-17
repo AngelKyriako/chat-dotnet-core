@@ -10,6 +10,8 @@ namespace ChatApp.Model {
 
         [JsonIgnore]
         public string PasswordHash { get; set; }
+        [JsonIgnore]
+        public byte[] PasswordSalt { get; set; }
 
         public string Firstname { get; set; }
 

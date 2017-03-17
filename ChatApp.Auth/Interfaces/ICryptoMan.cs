@@ -2,7 +2,7 @@
 
     public interface ICryptoMan {
 
-        string Hash(string str);
-        bool HashEqualsString(string hash, string str);
+        byte[] GenerateSalt();
+        string HashWithSalt(string str, byte[] salt);
     }
 }

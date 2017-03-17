@@ -82,7 +82,11 @@ namespace ChatApp.Auth {
 
         //TODO: Fix JWT authorization. :/
         public async Task<UserAndToken> IssueToken(UserModel user, string password) {
-            if (user == null || password == null || !Crypto.HashEqualsString(user.PasswordHash, password)) {
+            if (user == null || password == null ||
+                user.PasswordHash != Crypto.HashWithSalt(password, user.PasswordSalt)) {
+                _logger.LogDebug("password hashed to -> " + Crypto.HashWithSalt(password, user.PasswordSalt));
+                _logger.LogDebug("DB password hash -> " + user.PasswordHash);
+                _logger.LogDebug("DB password salt -> " + user.PasswordSalt);
                 throw new ArgumentException($"Invalid username or password");
             }
             string jti = await _config.JtiGenerator();

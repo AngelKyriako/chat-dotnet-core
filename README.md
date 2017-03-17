@@ -13,22 +13,67 @@ Hit the displayed server's url on your browser to be moved to the API's swagger 
 From there it is possible to test out certain requests.
 
 ## Authentication
-```
-POST /api/v1/auth/
-```
-No parameters are required. The second time you should get the JWT data.
 
-Use the token received in any request that requires it by setting the header:
+##### Register & login
+```sh
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+"username": "yolo",
+"password": "yolo"
+}' 'http://localhost:5000/api/v1/user'
 ```
-Authorization Bearer somebigggggggggggggggggtoken
+```json
+{
+  "user": {
+    "username": "string",
+    "password": "string",
+    "firstname": "string",
+    "lastname": "string",
+    "id": "string",
+    "enabled": true,
+    "createdAt": "2017-03-17T09:37:49.339Z",
+    "updatedAt": "2017-03-17T09:37:49.339Z"
+  },
+  "token": {
+    "accessToken": "string",
+    "expiresInSeconds": 0
+  }
+}
 ```
 
-## Test Authentication
+##### Login
+```sh
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+"username": "yolo",
+"password": "yolo"
+}' 'http://localhost:5000/api/v1/user/login'
 ```
-GET /api/v1/user
+```json
+{
+  "user": {
+    "username": "string",
+    "password": "string",
+    "firstname": "string",
+    "lastname": "string",
+    "id": "string",
+    "enabled": true,
+    "createdAt": "2017-03-17T09:37:49.339Z",
+    "updatedAt": "2017-03-17T09:37:49.339Z"
+  },
+  "token": {
+    "accessToken": "string",
+    "expiresInSeconds": 0
+  }
+}
 ```
 
-## Test Authorization
+##### Test Authentication
+
+```sh
+curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer accessTokenReceived' 'http://localhost:5000/api/v1/user'
 ```
-GET /api/v1/message
+
+##### Test Authorization (TODO: FIX [Authorize("somePolicy")]
+
+```sh
+curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer accessTokenReceived' 'http://localhost:5000/api/v1/message'
 ```
