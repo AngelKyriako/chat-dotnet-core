@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChatApp.Repository.Configuration {
     using Model;
@@ -6,6 +7,10 @@ namespace ChatApp.Repository.Configuration {
     public class UserEntityConstraints {
 
         public UserEntityConstraints(EntityTypeBuilder<UserModel> builder) {
+
+            builder.ToTable("user");
+
+            BaseEntityConstraints.Configure(builder);
 
             builder.Property(e => e.Username)
                 .IsRequired()

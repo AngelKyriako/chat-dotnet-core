@@ -12,6 +12,7 @@ namespace ChatApp.Model {
             get { return Key.ToString(); }
         }
 
+        //[JsonIgnore]
         public bool Enabled { get; set; }
 
         public DateTime CreatedAt { get; set; }

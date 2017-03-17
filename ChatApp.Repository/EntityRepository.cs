@@ -20,6 +20,16 @@ namespace ChatApp.Repository {
             _entities = context.Set<M>();
         }
 
+        protected long convertIdToKey(string id) {
+            long key = -1;
+            try {
+                key = long.Parse(id);
+            } catch (Exception) { }
+
+            return key;
+        }
+
+
         // read
         public virtual IEnumerable<M> Get(int page = 0, int limit = 100) {
             return _entities
@@ -46,20 +56,20 @@ namespace ChatApp.Repository {
 
         public virtual M GetOne(string id) {
             return _entities
-                .Where(e => e.Id.Equals(id))
+                .Where(e => e.Key.Equals(convertIdToKey(id)))
                 .FirstOrDefault();
         }
 
         public virtual M GetOneEnabled(string id) {
             return _entities
-                .Where(e => e.Id.Equals(id))
+                .Where(e => e.Key.Equals(convertIdToKey(id)))
                 .Where(e => e.Enabled)
                 .FirstOrDefault();
         }
 
         public virtual M GetOneDisabled(string id) {
             return _entities
-                .Where(e => e.Id.Equals(id))
+                .Where(e => e.Key.Equals(convertIdToKey(id)))
                 .Where(e => !e.Enabled)
                 .FirstOrDefault();
         }
@@ -69,6 +79,7 @@ namespace ChatApp.Repository {
             if (model == null) {
                 throw new ArgumentNullException("model");
             }
+
             _entities.Add(model);
             return model;
         }

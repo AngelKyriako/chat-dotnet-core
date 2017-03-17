@@ -64,13 +64,15 @@ namespace ChatApp.Web {
             switch (databaseType) {
                 case "MsSql":
                     //TODO: setup mssql
-                    services.AddDbContext<EntityContext>(opt => opt.UseSqlServer(uri.GetValue<string>(databaseType)));
+                    services.AddDbContext<EntityContext>(builder => {
+                        builder.UseSqlServer(uri.GetValue<string>(databaseType));
+                     });
                     break;
                 case "Mongo":
                     // TODO: setup mongo & code repository with mongo driver
                 case "Memory":
                 default:
-                    services.AddDbContext<EntityContext>(opt => opt.UseInMemoryDatabase());
+                    services.AddDbContext<EntityContext>(builder => builder.UseInMemoryDatabase());
                     break;
             }
             Console.WriteLine("Startup with " + databaseType + " database.");

@@ -5,15 +5,18 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ChatApp.Web.Controllers {
     using Model;
+    using Auth;
     using Service;
 
     [Route("api/v{version:apiVersion}/message")]
     public class MessageController : Controller {
 
         private IMessageService _messages;
+        private IAuthService _auth;
 
-        public MessageController(IMessageService messages) {
+        public MessageController(IMessageService messages, IAuthService auth) {
             _messages = messages;
+            _auth = auth;
         }
 
         [HttpGet]
@@ -29,7 +32,10 @@ namespace ChatApp.Web.Controllers {
 
         [HttpPost]
         public MessageModel Post([FromBody]MessageModel body) {
+            //UserModel creator = _auth.GetTokenUser(bearerToken);
+            //body.CreatorId = creator.Id;
             MessageModel createdModel = _messages.Create(body);
+            //createdModel.Creator = creator;
             return _messages.GetOneEnabled(createdModel.Id);
         }
 
