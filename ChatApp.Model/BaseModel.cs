@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 namespace ChatApp.Model {
 
     public class BaseModel {
+
         [JsonIgnore]
         public long Key { get; set; }
 
@@ -12,11 +13,18 @@ namespace ChatApp.Model {
             get { return Key.ToString(); }
         }
 
-        //[JsonIgnore]
+        [JsonIgnore]
         public bool Enabled { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+        [JsonIgnore]
+        public bool IsValid { get { return Id != null && Id.Length != 0; } }
+        
+        public string ToJson() {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

@@ -20,6 +20,8 @@ namespace ChatApp.Web {
     using Auth;
     using Auth.Configuration;
     using Service;
+    using WS;
+    using Controllers;
 
     public class Startup {
 
@@ -84,6 +86,9 @@ namespace ChatApp.Web {
             services.AddSingleton<ICryptoMan, CryptoMan>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddSingleton<WSConnectionHandler>();
+            services.AddSingleton<SocketController>();
         }
 
         /// <summary>
@@ -126,6 +131,9 @@ namespace ChatApp.Web {
             services.AddMvc(config => {
                 config.Filters.Add(new AuthorizeFilter(AuthStartup.DefaultPolicy));
             });
+
+            services.AddWS();
+
             ConfigureInjectedServices(services);
         }
 
@@ -136,7 +144,7 @@ namespace ChatApp.Web {
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider) {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -164,6 +172,13 @@ namespace ChatApp.Web {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseWS((builder) => {
+                IWSConnectionHandler mainHandler = serviceProvider.GetService<WSConnectionHandler>();
+                mainHandler.AddController(serviceProvider.GetService<SocketController>());
+
+                builder.AddConnectionHandler("/ws", mainHandler);
             });
         }
     }

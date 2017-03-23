@@ -3,6 +3,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
+using Microsoft.Extensions.Logging;
+
 namespace ChatApp.Web.Controllers {
     using Model;
     using Auth;
@@ -11,10 +13,12 @@ namespace ChatApp.Web.Controllers {
     [Route("api/v{version:apiVersion}/message")]
     public class MessageController : Controller {
 
+        private ILogger _logger;
         private IMessageService _messages;
         private IAuthService _auth;
 
-        public MessageController(IMessageService messages, IAuthService auth) {
+        public MessageController(ILoggerFactory loggerFactory, IMessageService messages, IAuthService auth) {
+            _logger = loggerFactory.CreateLogger<MessageController>();
             _messages = messages;
             _auth = auth;
         }

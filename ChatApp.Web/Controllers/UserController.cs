@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.Extensions.Logging;
+
 namespace ChatApp.Web.Controllers {
     using Model;
     using Auth;
@@ -12,10 +14,12 @@ namespace ChatApp.Web.Controllers {
     [Route("api/v{version:apiVersion}/user")]
     public class UserController : Controller {
 
+        private ILogger _logger;
         private IUserService _users;
         private IAuthService _auth;
 
-        public UserController(IUserService users, IAuthService auth) {
+        public UserController(ILoggerFactory loggerFactory, IUserService users, IAuthService auth) {
+            _logger = loggerFactory.CreateLogger<UserController>();
             _users = users;
             _auth = auth;
         }

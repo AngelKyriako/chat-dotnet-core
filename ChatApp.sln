@@ -13,6 +13,7 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Web", "ChatApp.Web\ChatApp.Web.xproj", "{C72E7E92-CF52-4C23-A7DE-E89CBB7544CA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1AD66195-79F4-4F00-A100-7DDA4894EC6E} = {1AD66195-79F4-4F00-A100-7DDA4894EC6E}
+		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B} = {F3B106EB-3095-4D5A-A4DE-C8168F57F26B}
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Model", "ChatApp.Model\ChatApp.Model.xproj", "{1A56AEB8-9CBB-4785-B0DA-7FA478A2A608}"
@@ -22,6 +23,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Auth", "ChatApp.Aut
 		{1A56AEB8-9CBB-4785-B0DA-7FA478A2A608} = {1A56AEB8-9CBB-4785-B0DA-7FA478A2A608}
 		{ED634AD3-8506-4F5B-B191-EC3FA2333F77} = {ED634AD3-8506-4F5B-B191-EC3FA2333F77}
 	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.WS", "ChatApp.WS\ChatApp.WS.xproj", "{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Client", "ChatApp.Client\ChatApp.Client.xproj", "{3A0AC352-B4B2-4873-B652-038918EA89FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +54,14 @@ Global
 		{1AD66195-79F4-4F00-A100-7DDA4894EC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AD66195-79F4-4F00-A100-7DDA4894EC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AD66195-79F4-4F00-A100-7DDA4894EC6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

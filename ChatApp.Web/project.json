@@ -4,6 +4,7 @@
     "ChatApp.Repository": "1.0.0-*",
     "ChatApp.Service": "1.0.0-*",
     "ChatApp.Auth": "1.0.0-*",
+    "ChatApp.WS": "1.0.0-*",
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
       "type": "platform"

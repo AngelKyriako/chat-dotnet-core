@@ -38,6 +38,7 @@ namespace ChatApp.Service {
             string password = model.Password;
 
             UserModel createdModel = Create(model);
+
             return await _auth.IssueToken(createdModel, password);
         }
 
