@@ -24,7 +24,6 @@ namespace ChatApp.Web.Controllers {
         }
 
         [HttpGet]
-        [Authorize(Policy = "RegularUser")]
         public IEnumerable<MessageModel> Get() {
             return _messages.GetEnabled();
         }

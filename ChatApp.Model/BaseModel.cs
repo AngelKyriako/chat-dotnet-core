@@ -11,6 +11,13 @@ namespace ChatApp.Model {
 
         public string Id {
             get { return Key.ToString(); }
+            set {
+                long keyRef = -1;
+                long.TryParse(value, out keyRef);
+                if (keyRef != -1) {
+                    Key = keyRef;
+                }
+            }
         }
 
         [JsonIgnore]

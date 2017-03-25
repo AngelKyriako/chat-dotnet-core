@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace ChatApp.WS {
@@ -23,8 +22,8 @@ namespace ChatApp.WS {
         }
 
         // emit
-        public virtual async Task SendMessageToAll(string message) {
-            await _parentHandler.SendMessageToAllAsync(message);
+        public virtual async Task SendMessageToAll(string message, Func<WSConnection, bool> filter) {
+            await _parentHandler.SendMessageAsync(message, filter);
         }
 
         //TODO: support something like this

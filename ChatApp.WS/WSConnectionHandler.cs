@@ -52,9 +52,9 @@ namespace ChatApp.WS
         }
 
         // emit
-        public async Task SendMessageToAllAsync(string message) {
+        public async Task SendMessageAsync(string message, Func<WSConnection, bool> filter) {
             foreach (WSConnection connection in _wsConnectionHolder.Connections) {
-                if (connection.Socket.State == WebSocketState.Open) {
+                if (connection.Socket.State == WebSocketState.Open && filter(connection)) {
                     await connection.SendMessage(message);
                 }
             }
