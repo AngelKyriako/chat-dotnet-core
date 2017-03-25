@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +19,12 @@ namespace ChatApp.Auth {
 
     /// <summary>
     /// Handles Authentication & Authorization of the application via Json Web Tokens.
+    /// 
+    /// References:
+    /// goblin coding part 1: https://goblincoding.com/2016/07/03/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-i/
+    /// goblin coding part 2: https://goblincoding.com/2016/07/07/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-ii/
+    ///
+    /// decrypt: https://andrewlock.net/a-look-behind-the-jwt-bearer-authentication-middleware-in-asp-net-core/
     /// </summary>
     public class JwtAuthService : IAuthService {
 
@@ -45,7 +53,23 @@ namespace ChatApp.Auth {
             _logger.LogInformation("Issuer: " + _config.Issuer 
                                  + ", Audience: " + _config.Audience 
                                  + ", token validFor timeframe: " + _config.ValidFor);
-        }
+
+            ValidationParams = new TokenValidationParameters {
+                ValidateIssuer = true,
+                ValidIssuer = _config.Issuer,
+
+                ValidateAudience = true,
+                ValidAudience = _config.Audience,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+    }
 
         private static void ThrowIfInvalidOptions(JwtConfiguration options) {
             if (options == null) throw new ArgumentNullException(nameof(options));
@@ -74,13 +98,8 @@ namespace ChatApp.Auth {
                 .TotalSeconds);
         }
 
-        public string Issuer { get { return _config.Issuer; } }
+        public TokenValidationParameters ValidationParams { get; private set; }
 
-        public string Audience { get { return _config.Audience; } }
-
-        public SymmetricSecurityKey SigningKey { get { return _signingKey; } }
-
-        //TODO: Fix JWT authorization. :/
         public async Task<UserAndToken> IssueToken(UserModel user, string password) {
             if (user == null || password == null ||
                 user.PasswordHash != Crypto.HashWithSalt(password, user.PasswordSalt)) {
@@ -92,48 +111,25 @@ namespace ChatApp.Auth {
             string jti = await _config.JtiGenerator();
 
             List<Claim> claims = new List<Claim> {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Jti, jti),
-                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_config.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.Firstname),
-                new Claim(JwtRegisteredClaimNames.FamilyName, user.Lastname)
+                new Claim(AuthConst.CLAIM_ID, user.Id),
+                new Claim(AuthConst.CLAIM_JTI, jti),
+                new Claim(AuthConst.CLAIM_IAT, ToUnixEpochDate(_config.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                new Claim(AuthConst.CLAIM_USERNAME, user.Username),
+                new Claim(AuthConst.CLAIM_FIRSTNAME, user.Firstname),
+                new Claim(AuthConst.CLAIM_LASTNAME, user.Lastname)
             };
-
-            //ClaimsIdentity identity = new ClaimsIdentity(new GenericIdentity(user.Username, "JwtAccessToken"), claims);
+            ClaimsIdentity identity = new ClaimsIdentity(new GenericIdentity(user.Username, "JwtAccessToken"), claims);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
             // Create the JWT security token and encode it.
             JwtSecurityToken jwt = new JwtSecurityToken(
                 issuer: _config.Issuer,
                 audience: _config.Audience,
-                claims: claims,
+                claims: principal.Claims,
                 notBefore: _config.NotBefore,
                 expires: _config.Expiration,
                 signingCredentials: _config.SigningCredentials
             );
-
-            #region DELETE ME 
-            _logger.LogInformation("JWT: ");
-            foreach (var c in jwt.Claims) {
-                _logger.LogInformation("Claim: " + c.Type + ": " + c.Value + " of type " + c.ValueType);
-            }
-
-            var test = new JwtSecurityTokenHandler();
-            string accessToken = test.WriteToken(jwt);
-            JwtSecurityToken decoded = test.ReadJwtToken(accessToken);
-
-
-            _logger.LogInformation("~~~~~~~~~~~~~~~~~~~~ TEST JWT ~~~~~~~~~~~~~~~~~~");
-            _logger.LogInformation("test.CanValidateToken" + test.CanValidateToken);
-            _logger.LogInformation("test.CanWriteToken" + test.CanWriteToken);
-            _logger.LogInformation("test.CanReadToken(accessToken)" + test.CanReadToken(accessToken));
-            _logger.LogInformation("Decoded JWT: ");
-            foreach (var c in decoded.Claims) {
-                _logger.LogInformation("Claim " + c.Type + ": " + c.Value + " of type " + c.ValueType);
-            }
-            _logger.LogInformation("decoded.Actor: " + decoded.Actor);
-            _logger.LogInformation("~~~~~~~~~~~~~~~~~~~~ END ~~~~~~~~~~~~~~~~~~");
-            #endregion
 
             // Export to a model ready for the consumer
             JwtToken token = new JwtToken() {
@@ -145,6 +141,23 @@ namespace ChatApp.Auth {
                 User = user,
                 Token = token
             };
+        }
+
+        public UserModel DecodeTokenToUser(string accessToken) {
+            JwtSecurityTokenHandler validator = new JwtSecurityTokenHandler();
+
+            if (validator.CanReadToken(accessToken)) {
+                SecurityToken accessTokenDecoded;
+                ClaimsPrincipal principal = validator.ValidateToken(accessToken, ValidationParams, out accessTokenDecoded);
+                _logger.LogInformation("principal.Identity.Name: " + principal.Identity.Name);
+                if (principal.Identity.IsAuthenticated) {
+                    return _users.GetOneEnabledByUsername(principal.Claims.SingleOrDefault((claim) => {
+                        return claim.Type == AuthConst.CLAIM_USERNAME;
+                    }).Value);
+                }
+            }
+
+            return null;
         }
 
         public async Task<UserAndToken> IssueToken(string username, string password) {

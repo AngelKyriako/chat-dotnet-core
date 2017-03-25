@@ -17,19 +17,20 @@ namespace ChatApp.Auth.Configuration {
     /// of an dotnet code MVC app.
     /// 
     /// More info on policies and claims:
-    /// repo: https://github.com/blowdart/AspNetAuthorizationWorkshop
-    /// goblin part 1: https://channel9.msdn.com/Blogs/Seth-Juarez/ASPNET-Core-Authorization-with-Barry-Dorrans
-    /// goblin part 2: https://channel9.msdn.com/Blogs/Seth-Juarez/Advanced-aspNET-Core-Authorization-with-Barry-Dorrans
+    /// Barry-Dorrans repo: https://github.com/blowdart/AspNetAuthorizationWorkshop
+    /// Barry-Dorrans part 1: https://channel9.msdn.com/Blogs/Seth-Juarez/ASPNET-Core-Authorization-with-Barry-Dorrans
+    /// Barry-Dorrans part 2: https://channel9.msdn.com/Blogs/Seth-Juarez/Advanced-aspNET-Core-Authorization-with-Barry-Dorrans
     /// </summary>
     public static class AuthStartup {
 
         private static void ConfigureRegularUserPolicy(AuthorizationPolicyBuilder policyBuilder) {
-            policyBuilder.RequireClaim(JwtRegisteredClaimNames.Sub)
-                .RequireClaim(JwtRegisteredClaimNames.Jti)
-                .RequireClaim(JwtRegisteredClaimNames.Iat)
-                .RequireClaim(JwtRegisteredClaimNames.UniqueName)
-                .RequireClaim(JwtRegisteredClaimNames.GivenName)
-                .RequireClaim(JwtRegisteredClaimNames.FamilyName);
+            policyBuilder
+                .RequireClaim(AuthConst.CLAIM_ID)
+                .RequireClaim(AuthConst.CLAIM_JTI)
+                .RequireClaim(AuthConst.CLAIM_IAT)
+                .RequireClaim(AuthConst.CLAIM_USERNAME)
+                .RequireClaim(AuthConst.CLAIM_FIRSTNAME)
+                .RequireClaim(AuthConst.CLAIM_LASTNAME);
         }
 
         public static AuthorizationPolicy DefaultPolicy {
@@ -37,7 +38,7 @@ namespace ChatApp.Auth.Configuration {
                 AuthorizationPolicyBuilder builder = new AuthorizationPolicyBuilder();
 
                 builder.RequireAuthenticatedUser();
-                //ConfigureRegularUserPolicy(builder);
+                ConfigureRegularUserPolicy(builder);
 
                 return builder.Build();
             }
@@ -49,19 +50,25 @@ namespace ChatApp.Auth.Configuration {
             services.AddAuthorization(options => {
                 
                 // Available policies to use for authorization
-
                 options.AddPolicy(AuthConst.POLICY_REGULAR_USER, policy => {
-                    //TODO: Fix JWT authorization. :/
+                    policy.RequireAuthenticatedUser();
+
                     ConfigureRegularUserPolicy(policy);
-                    // default policy for all resources
-                    //options.DefaultPolicy = policy.Build();
                 });
 
                 options.AddPolicy(AuthConst.POLICY_ADMIN, policy => {
+                    policy.RequireAuthenticatedUser();
+
+                    ConfigureRegularUserPolicy(policy);
+
                     policy.RequireClaim(AuthConst.CLAIM_IS_ADMIN);
                  });
 
                 options.AddPolicy(AuthConst.POLICY_PRO_USER, policy => {
+                    policy.RequireAuthenticatedUser();
+
+                    ConfigureRegularUserPolicy(policy);
+
                     policy.RequireClaim(AuthConst.CLAIM_MEMBERSHIP, 
                             AuthConst.CLAIM_MEMBERSHIP_VALUE_BASIC,
                             AuthConst.CLAIM_MEMBERSHIP_VALUE_MORE_GUNS);
@@ -75,21 +82,7 @@ namespace ChatApp.Auth.Configuration {
             app.UseJwtBearerAuthentication(new JwtBearerOptions {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
-                TokenValidationParameters = new TokenValidationParameters {
-                    ValidateIssuer = true,
-                    ValidIssuer = authService.Issuer,
-
-                    ValidateAudience = true,
-                    ValidAudience = authService.Audience,
-
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = authService.SigningKey,
-
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true,
-
-                    ClockSkew = TimeSpan.Zero
-                }
+                TokenValidationParameters = authService.ValidationParams
             });
         }
 

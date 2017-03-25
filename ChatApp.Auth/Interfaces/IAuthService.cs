@@ -9,13 +9,11 @@ namespace ChatApp.Auth {
 
         ICryptoMan Crypto { get; }
 
-        string Issuer { get; }
-
-        string Audience { get; }
-
-        SymmetricSecurityKey SigningKey { get; }
+        TokenValidationParameters ValidationParams { get; }
 
         Task<UserAndToken> IssueToken(string username, string password);
         Task<UserAndToken> IssueToken(UserModel user, string password);
+
+        UserModel DecodeTokenToUser(string accessToken);
     }
 }
