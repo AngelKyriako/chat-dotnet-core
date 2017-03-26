@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
@@ -7,7 +8,7 @@ namespace ChatApp.Web.Controllers {
     using Model;
     using WS;
 
-    public class SocketController: WSController  {
+    public class SocketController: WSController<WSMessage<MessageModel>>  {
 
         private ILogger _logger;
         private IAuthService _auth;
@@ -18,29 +19,29 @@ namespace ChatApp.Web.Controllers {
         }
 
         public override async Task OnConnected(WSConnection connection) {
-            _logger.LogInformation(connection + " connected");
+            await SendMessage(connection + " connected");
         }
 
         public override async Task OnDisconnected(WSConnection connection) {
-            _logger.LogInformation(connection + "disconnected");
+            await SendMessage(connection + " disconnected");
         }
 
-        public override async Task OnMessage(WSConnection connection, string message) {
-            _logger.LogInformation(connection + " sent: " + message);
+        public override async Task OnMessageSerialized(WSConnection connection, string message) {
+            await SendMessage(connection + " sent: " + message, (conn) => {
+                return (conn.Id == connection.Id);
+            });
+        }
 
-            //TODO: Message data structure
-            //TODO: Handle authorization
-            string accessToken = "";
-            _logger.LogInformation("accessToken: " + accessToken);
-            UserModel authedUser = _auth.DecodeTokenToUser(accessToken);
+        public override async Task OnMessageDeserialized(WSConnection connection, WSMessage<MessageModel> message) {
+            _logger.LogInformation("accessToken: " + message.AccessToken);
+
+            UserModel authedUser = _auth.DecodeTokenToUser(message.AccessToken);
             if (authedUser == null) {
-                //disconnect
+                await DropConnection(connection, WebSocketCloseStatus.InvalidPayloadData, "authorization failed");
                 return;
-            } else {
-                _logger.LogInformation("authedUser: " + authedUser.ToJson());
             }
 
-            await SendMessageToAll(connection + " sent: " + message, (conn) => {
+            await SendMessage(connection + " sent: " + SerializeMessage(message), (conn) => {
                 return (conn.Id == connection.Id);
             });
         }

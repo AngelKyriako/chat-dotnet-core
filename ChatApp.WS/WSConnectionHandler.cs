@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatApp.WS
@@ -30,15 +31,17 @@ namespace ChatApp.WS
             WSConnection connection = _wsConnectionHolder.AddConnectionBySocket(socket);
 
             foreach (IWSController controller in _controllers) {
-                controller.OnConnected(connection);
+                await controller.OnConnected(connection);
             }
         }
 
         public virtual async Task OnDisconnected(WebSocket socket) {
-            WSConnection connection = await _wsConnectionHolder.RemoveConnectionBySocket(socket);
+            WSConnection connection = await _wsConnectionHolder.RemoveConnectionBySocket(socket,
+                WebSocketCloseStatus.NormalClosure,
+                "disconnected");
 
             foreach (IWSController controller in _controllers) {
-                controller.OnDisconnected(connection);
+                await controller.OnDisconnected(connection);
             }
         }
 
@@ -46,16 +49,42 @@ namespace ChatApp.WS
             WSConnection connection = _wsConnectionHolder.GetConnectionBySocket(socket);
 
             string payload = Encoding.UTF8.GetString(buffer, 0, result.Count);
+
             foreach (IWSController controller in _controllers) {
-                controller.OnMessage(connection, payload);
+                await controller.OnMessage(connection, payload);
             }
         }
 
         // emit
-        public async Task SendMessageAsync(string message, Func<WSConnection, bool> filter) {
+        public async Task SendMessage(WSConnection connection, string message) {
+            if (connection.Socket.State != WebSocketState.Open)
+                return;
+
+            await connection.Socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.ASCII.GetBytes(message),
+                                                      offset: 0,
+                                                      count: message.Length),
+                       messageType: WebSocketMessageType.Text,
+                       endOfMessage: true,
+                       cancellationToken: CancellationToken.None);
+        }
+
+        public async Task SendMessage(string message, Func<WSConnection, bool> filter) {
             foreach (WSConnection connection in _wsConnectionHolder.Connections) {
-                if (connection.Socket.State == WebSocketState.Open && filter(connection)) {
-                    await connection.SendMessage(message);
+                if (filter == null || filter(connection)) {
+                    await SendMessage(connection, message);
+                }
+            }
+        }
+
+        // drop connections
+        public async Task DropConnection(WSConnection connection, WebSocketCloseStatus closeStatus, string reason) {
+            await _wsConnectionHolder.RemoveConnection(connection, closeStatus, reason);
+        }
+
+        public async Task DropConnections(WebSocketCloseStatus closeStatus, string reason, Func<WSConnection, bool> filter = null) {
+            foreach (WSConnection connection in _wsConnectionHolder.Connections) {
+                if (filter == null || filter(connection)) {
+                    await DropConnection(connection, closeStatus, reason);
                 }
             }
         }

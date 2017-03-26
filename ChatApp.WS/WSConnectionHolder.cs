@@ -63,17 +63,7 @@ namespace ChatApp.WS {
             return connection;
         }
 
-        public async Task<WSConnection> RemoveConnectionBySocket(WebSocket socket) {
-            if (socket == null) {
-                throw new ArgumentNullException("socket should not be null");
-            }
-
-            string connectionId = _connections.FirstOrDefault(p => p.Value.Socket == socket).Key;
-
-            return await RemoveConnectionById(connectionId);
-        }
-
-        public async Task<WSConnection> RemoveConnectionById(string connectionId) {
+        public async Task<WSConnection> RemoveConnectionById(string connectionId, WebSocketCloseStatus closeStatus, string reason) {
             if (connectionId == null) {
                 throw new ArgumentNullException("connectionId should not be null");
             }
@@ -81,19 +71,33 @@ namespace ChatApp.WS {
             WSConnection connection;
             _connections.TryRemove(connectionId, out connection);
 
-            await connection.Socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
-                                    statusDescription: "Closed by " + typeof(WSConnectionHolder).Name,
-                                    cancellationToken: CancellationToken.None);
+            if (connection.Socket.State != WebSocketState.Closed &&
+                connection.Socket.State != WebSocketState.CloseSent &&
+                connection.Socket.State != WebSocketState.CloseReceived) {
+                await connection.Socket.CloseAsync(closeStatus, reason, CancellationToken.None);
+            }
 
             return connection;
         }
 
-        public async Task<WSConnection> RemoveConnection(WSConnection connection) {
+        public async Task<WSConnection> RemoveConnectionBySocket(WebSocket socket, WebSocketCloseStatus closeStatus, string reason) {
+
+            if (socket == null) {
+                throw new ArgumentNullException("socket should not be null");
+            }
+
+            string connectionId = _connections.FirstOrDefault(p => p.Value.Socket == socket).Key;
+
+            return await RemoveConnectionById(connectionId, closeStatus, reason);
+        }
+
+        public async Task<WSConnection> RemoveConnection(WSConnection connection, WebSocketCloseStatus closeStatus, string reason) {
+
             if (connection == null) {
                 throw new ArgumentNullException("connection should not be null");
             }
 
-            return await RemoveConnectionById(connection.Id);
+            return await RemoveConnectionById(connection.Id, closeStatus, reason);
         }
     }
 

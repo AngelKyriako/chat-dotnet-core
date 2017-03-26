@@ -29,9 +29,5 @@ namespace ChatApp.Model {
 
         [JsonIgnore]
         public bool IsValid { get { return Id != null && Id.Length != 0; } }
-        
-        public string ToJson() {
-            return JsonSerializer.Serialize(this);
-        }
     }
 }

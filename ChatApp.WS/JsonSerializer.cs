@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace ChatApp.Model {
+namespace ChatApp.WS {
 
     /// <summary>
     /// Handles JSON serialization & deserialization based on Newtonsoft.Json.
@@ -17,8 +19,13 @@ namespace ChatApp.Model {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public static M Deserialize<M>(string json) {
-            return JsonConvert.DeserializeObject<M>(json);
+        public static M Deserialize<M>(string json) where M : class {
+            try {
+                return JsonConvert.DeserializeObject<M>(json);
+            } catch(Exception e) {
+                return default(M);
+            }
+
         }
 
         public static string Serialize(object model) {
