@@ -5,6 +5,8 @@
   },
 
   "dependencies": {
+    "ChatApp.Common": "1.0.0-*",
+    "ChatApp.Model": "1.0.0-*",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.1"

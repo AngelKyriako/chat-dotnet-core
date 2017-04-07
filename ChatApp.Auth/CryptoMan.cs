@@ -24,7 +24,6 @@ namespace ChatApp.Auth {
             using (var rng = RandomNumberGenerator.Create()) {
                 rng.GetBytes(salt);
             }
-            _logger.LogDebug($"Salt: {Convert.ToBase64String(salt)}");
             return salt;
         }
 

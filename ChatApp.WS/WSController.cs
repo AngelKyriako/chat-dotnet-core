@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace ChatApp.WS {
+    using Common;
 
     public class WSController<M> : WSControllerBase where M : class {
 
