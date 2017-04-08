@@ -57,7 +57,7 @@ At the moment it is setup to support:
 - in memory DB
 - MSSQL server
 
-TODO: MongoDB
+*TODO: MongoDB support*
 
 Database(non business logic) related rules & constraints regarding the models should be defined here.
 
@@ -99,8 +99,8 @@ It introduces too classes:
 
 This module should be independent of the application code.
 
-TODO: Find a way to bind the WSConnection with a custom type (IWSConnection, WSConnection<T>).
-TODO: Add to nuget and remove from project.
+*TODO: Find a way to bind the WSConnection with a custom type (IWSConnection, WSConnection<T>).*
+*TODO: Add to nuget and remove from project.*
 
 ### Web (MVC)
 
@@ -121,9 +121,9 @@ Dependencies:
 - Common
 - Model
 
-Includes anything that is needed for an app to communicate with the server via.
-- Http protocol
-- Websocket protocol (TODO)
+Includes anything that is needed for an client application to communicate with the server.
+
+TODO: Unity support
 
 ### Console Demo (Console App)
 
@@ -135,7 +135,7 @@ Dependencies:
 
 Includes a demo console chat application that uses the server api.
 
-TODO: Abstract out WebSocket4Net in the client class library
+*TODO: Abstract out WebSocket4Net in the client class library*
 
 ### Dependencies Overview
 
@@ -151,21 +151,24 @@ TODO: Abstract out WebSocket4Net in the client class library
 | Client     |   O    |   O   |            |      |         |     |    |   -    |             |
 | ConsoleDemo|   O    |   O   |            |      |         |     |    |   O    |     -       |
 
-*Not depencent at the moment, but could be if the module is expanded further.
+*Does bot depend at the moment, but could be if the module is further expanded.
 
 ### Layers Overview
 
 |   Layer    | Common | Model  | Repository | Auth | Service | Web |
 |:-----------|:------:|:------:|:----------:|:----:|:-------:|:---:|
 | Core       |   O    |   O    |            |      |         |     |
-| Database   |        |        |     O      |      |         |     |
+| Repository |        |        |     O      |      |         |     |
 | Service    |        |        |            |  O   |   O     |     |
 | Interface  |        |        |            |      |         |  O  |
 
 ### To be Continued
 
 1. Abstract out WebSocket4Net from the ConsoleDemo into the ChatApp.Client library.
-2. Authorize the web socket listeners
-3. Bind WSConnection with the user model
-4. Add WS Middleware in nuget and remove from solution
-5. MongoDB repositories with the same model layer.
+2. Update the Client module or create a new one that supports Unity (.net3.5)
+3. Authorize the web socket listeners #1
+4. Bind WSConnection with the user model #1
+5. Add WS Middleware in nuget and remove from solution
+6. MongoDB repositories with the same model layer.
+
+**Link References can be found in the code, in important class header comments.**
