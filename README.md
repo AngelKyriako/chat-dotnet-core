@@ -135,10 +135,7 @@ Dependencies:
 
 Includes a demo console chat application that uses the server api.
 
-TODO: Abstract out websocket in the client class library
-Dependencies:
-- Model
-- Client
+TODO: Abstract out WebSocket4Net in the client class library
 
 ### Dependencies Overview
 
@@ -164,3 +161,11 @@ Dependencies:
 | Database   |        |        |     O      |      |         |     |
 | Service    |        |        |            |  O   |   O     |     |
 | Interface  |        |        |            |      |         |  O  |
+
+### To be Continued
+
+1. Abstract out WebSocket4Net from the ConsoleDemo into the ChatApp.Client library.
+2. Authorize the web socket listeners
+3. Bind WSConnection with the user model
+4. Add WS Middleware in nuget and remove from solution
+5. MongoDB repositories with the same model layer.
