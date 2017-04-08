@@ -115,6 +115,31 @@ This module should delegate method calls from the Service layer based on HTTP re
 
 Its a dummy module and NO logic should be found on this module.
 
+### Client (Class Library)
+
+Dependencies:
+- Common
+- Model
+
+Includes anything that is needed for an app to communicate with the server via.
+- Http protocol
+- Websocket protocol (TODO)
+
+### Console Demo (Console App)
+
+Dependencies:
+- Common
+- Model
+- Client
+- WebSocket4Net
+
+Includes a demo console chat application that uses the server api.
+
+TODO: Abstract out websocket in the client class library
+Dependencies:
+- Model
+- Client
+
 ### Dependencies Overview
 
 |            | Common | Model | Repository | Auth | Service | Web | WS | Client | ConsoleDemo |
