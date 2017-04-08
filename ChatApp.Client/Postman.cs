@@ -24,6 +24,17 @@ namespace ChatApp.Client {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
+        
+        public void SetAuthorizationBearer(string token) {
+            if (token != null) {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            } else {
+                client.DefaultRequestHeaders.Authorization = null;
+            }
+        }
+        public void CleanAuthorizationBearer() {
+            SetAuthorizationBearer(null);
+        }
 
         public async Task<RES_M> Post<REQ_M, RES_M>(string route, REQ_M model) where REQ_M: class where RES_M: class {
             string reqJson = JsonSerializer.Serialize(model);

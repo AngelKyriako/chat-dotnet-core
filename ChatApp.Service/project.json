@@ -2,7 +2,6 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "ChatApp.Model": "1.0.0-*",
     "ChatApp.Repository": "1.0.0-*",
     "ChatApp.Auth": "1.0.0-*",
     "Microsoft.AspNetCore.Cryptography.KeyDerivation": "1.0.0",

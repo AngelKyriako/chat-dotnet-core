@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ChatApp.Client")]
+[assembly: AssemblyProduct("ChatApp.ClientUnity")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b08a0007-406b-412f-bbac-246f3c2c356a")]
+[assembly: Guid("4f550feb-eb5f-4f74-9153-8cd94e6e93bb")]

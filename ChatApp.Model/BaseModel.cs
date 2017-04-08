@@ -7,7 +7,7 @@ namespace ChatApp.Model {
     public class BaseModel {
 
         [JsonIgnore]
-        public long Key { get; set; }
+        public long Key { get; private set; }
 
         public string Id {
             get { return Key.ToString(); }
@@ -21,13 +21,13 @@ namespace ChatApp.Model {
         }
 
         [JsonIgnore]
+        public bool HasId { get { return Id != null && Key != -1; } }
+        
+        [JsonIgnore]
         public bool Enabled { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
-
-        [JsonIgnore]
-        public bool IsValid { get { return Id != null && Id.Length != 0; } }
     }
 }

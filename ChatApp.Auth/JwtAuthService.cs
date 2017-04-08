@@ -143,6 +143,10 @@ namespace ChatApp.Auth {
             };
         }
 
+        public async Task<UserAndToken> IssueToken(string username, string password) {
+            return await IssueToken(_users.GetOneByUsername(username), password);
+        }
+
         public UserModel DecodeTokenToUser(string accessToken) {
             JwtSecurityTokenHandler validator = new JwtSecurityTokenHandler();
 
@@ -158,10 +162,6 @@ namespace ChatApp.Auth {
             }
 
             return null;
-        }
-
-        public async Task<UserAndToken> IssueToken(string username, string password) {
-            return await IssueToken(_users.GetOneByUsername(username), password);
         }
     }
 }

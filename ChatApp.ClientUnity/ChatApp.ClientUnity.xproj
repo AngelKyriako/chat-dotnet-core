@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b08a0007-406b-412f-bbac-246f3c2c356a</ProjectGuid>
-    <RootNamespace>ChatApp.Client</RootNamespace>
+    <ProjectGuid>4f550feb-eb5f-4f74-9153-8cd94e6e93bb</ProjectGuid>
+    <RootNamespace>ChatApp.ClientUnity</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>

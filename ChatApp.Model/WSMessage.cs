@@ -6,6 +6,6 @@
 
         public string AccessToken { get; set; }
 
-        public M Body { get; set; }
+        public M Payload { get; set; }
     }
 }

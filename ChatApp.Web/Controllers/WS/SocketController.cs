@@ -8,7 +8,7 @@ namespace ChatApp.Web.Controllers {
     using Model;
     using WS;
 
-    public class SocketController: WSController<WSMessage<MessageModel>>  {
+    public class SocketController: WSControllerGeneric<WSMessage<MessageModel>>  {
 
         private ILogger _logger;
         private IAuthService _auth;
@@ -18,18 +18,19 @@ namespace ChatApp.Web.Controllers {
             _auth = auth;
         }
 
-        public override async Task OnConnected(WSConnection connection) {
-            await SendMessage(connection + " connected");
-        }
+        //public override async Task OnConnected(WSConnection connection) {
+        //    await SendMessage(connection + " connected");
+        //}
 
-        public override async Task OnDisconnected(WSConnection connection) {
-            await SendMessage(connection + " disconnected");
-        }
+        //public override async Task OnDisconnected(WSConnection connection) {
+        //    await SendMessage(connection + " disconnected");
+        //}
 
         public override async Task OnMessageSerialized(WSConnection connection, string message) {
-            await SendMessage(connection + " sent: " + message, (conn) => {
-                return (conn.Id == connection.Id);
-            });
+            _logger.LogInformation(connection + " sent: " + message);
+            //await SendMessage(connection + " sent: " + message, (conn) => {
+            //    return (conn.Id == connection.Id);
+            //});
         }
 
         public override async Task OnMessageDeserialized(WSConnection connection, WSMessage<MessageModel> message) {
@@ -40,10 +41,6 @@ namespace ChatApp.Web.Controllers {
                 await DropConnection(connection, WebSocketCloseStatus.InvalidPayloadData, "authorization failed");
                 return;
             }
-
-            await SendMessage(connection + " sent: " + SerializeMessage(message), (conn) => {
-                return (conn.Id == connection.Id);
-            });
         }
     }
 }

@@ -26,9 +26,13 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Auth", "ChatApp.Aut
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.WS", "ChatApp.WS\ChatApp.WS.xproj", "{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Client", "ChatApp.Client\ChatApp.Client.xproj", "{3A0AC352-B4B2-4873-B652-038918EA89FB}"
-EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Common", "ChatApp.Common\ChatApp.Common.xproj", "{947BB65F-B080-4FEF-992C-A89BBB2C186B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.Client", "ChatApp.Client\ChatApp.Client.xproj", "{B08A0007-406B-412F-BBAC-246F3C2C356A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.ClientUnity", "ChatApp.ClientUnity\ChatApp.ClientUnity.xproj", "{4F550FEB-EB5F-4F74-9153-8CD94E6E93BB}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ChatApp.ConsoleDemo", "ChatApp.ConsoleDemo\ChatApp.ConsoleDemo.xproj", "{35CA9783-A124-4EA7-9765-37220A77D90E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,14 +64,22 @@ Global
 		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3B106EB-3095-4D5A-A4DE-C8168F57F26B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A0AC352-B4B2-4873-B652-038918EA89FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{947BB65F-B080-4FEF-992C-A89BBB2C186B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{947BB65F-B080-4FEF-992C-A89BBB2C186B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947BB65F-B080-4FEF-992C-A89BBB2C186B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947BB65F-B080-4FEF-992C-A89BBB2C186B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08A0007-406B-412F-BBAC-246F3C2C356A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08A0007-406B-412F-BBAC-246F3C2C356A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08A0007-406B-412F-BBAC-246F3C2C356A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08A0007-406B-412F-BBAC-246F3C2C356A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F550FEB-EB5F-4F74-9153-8CD94E6E93BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F550FEB-EB5F-4F74-9153-8CD94E6E93BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F550FEB-EB5F-4F74-9153-8CD94E6E93BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F550FEB-EB5F-4F74-9153-8CD94E6E93BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35CA9783-A124-4EA7-9765-37220A77D90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35CA9783-A124-4EA7-9765-37220A77D90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35CA9783-A124-4EA7-9765-37220A77D90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35CA9783-A124-4EA7-9765-37220A77D90E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
