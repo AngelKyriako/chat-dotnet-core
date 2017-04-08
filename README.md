@@ -1,79 +1,141 @@
-# chat-dotnet-core
+# ChatApp .NET Core
 
-Playground for server side dotnet core programming.
+### Playground for server side dotnet core programming.
+
+## Prerequisites
+
+- [dotnet core](https://www.microsoft.com/net/core)
+- Add dotnet core to system path. (```C:\Program Files\dotnet```) 
 
 ## Getting Started
 
+### Run the server
+
 ```sh 
 cd ChatApp.Web
-dotnet run
+dotnet.exe run
 ```
 
-Hit the displayed server's url on your browser to be moved to the API's swagger UI.
-From there it is possible to test out certain requests.
+*Hit the displayed server's url on your browser to be moved to the API's swagger UI.
+From there it is possible to test out certain requests.*
 
-## Authentication
+### Run the console demo
 
-##### Register & login
-```sh
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-"username": "yolo",
-"password": "yolo"
-}' 'http://localhost:5000/api/v1/user'
-```
-```json
-{
-  "user": {
-    "username": "string",
-    "password": "string",
-    "firstname": "string",
-    "lastname": "string",
-    "id": "string",
-    "enabled": true,
-    "createdAt": "2017-03-17T09:37:49.339Z",
-    "updatedAt": "2017-03-17T09:37:49.339Z"
-  },
-  "token": {
-    "accessToken": "string",
-    "expiresInSeconds": 0
-  }
-}
+```sh 
+cd ChatApp.ConsoleDemo
+dotnet.exe run
 ```
 
-##### Login
-```sh
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-"username": "yolo",
-"password": "yolo"
-}' 'http://localhost:5000/api/v1/user/login'
-```
-```json
-{
-  "user": {
-    "username": "string",
-    "password": "string",
-    "firstname": "string",
-    "lastname": "string",
-    "id": "string",
-    "enabled": true,
-    "createdAt": "2017-03-17T09:37:49.339Z",
-    "updatedAt": "2017-03-17T09:37:49.339Z"
-  },
-  "token": {
-    "accessToken": "string",
-    "expiresInSeconds": 0
-  }
-}
-```
+## Architecture
 
-##### Test Authentication
+The project is setup with a layer based architecture.
 
-```sh
-curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer accessTokenReceived' 'http://localhost:5000/api/v1/user'
-```
+The main idea is to keep a core layer with all the logic of the app, so that it can be shared between the server and client. Both the server and the client will depend on the core layer and can be build on it independently.
 
-##### Test Authorization (TODO: FIX [Authorize("somePolicy")]
+### Common (Class Library)
 
-```sh
-curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer accessTokenReceived' 'http://localhost:5000/api/v1/message'
-```
+Contains common utilities among all the projects.
+
+| Module | Description |
+|:-------|:------------|
+| JsonSerializer | A wrapper on top of newtonsoft.json JsonConvert that is configured with the same serialization settings with dotnetcore MVC. It is needed for serializing the model's of the application on the client side and the server side for the web socket controllers which are custom made. |
+
+### Model (Class Library)
+
+Includes all the models that are part of the application, be it database entities or helper classes. 
+
+This module is going to be used by both the server and the client. Therefore, it should be setup to be database agnostic. Mo database dependencies are found on this module.
+
+### Repository (Class Library)
+
+Dependencies:
+- Model
+
+Includes anything related to persistence. From database to plain file storage.
+
+At the moment it is setup to support:
+- in memory DB
+- MSSQL server
+
+TODO: MongoDB
+
+Database(non business logic) related rules & constraints regarding the models should be defined here.
+
+### Auth (Class Library)
+
+Dependencies:
+- Model
+- Repository
+
+Includes anything authentication related.
+
+At the moment it supports authentication/authorization based on Json Web Token.
+
+### Service (Class Library)
+
+Dependencies:
+- Model
+- Repository
+- Auth
+
+This module includes the high level API of the application.
+
+This is the transport protocol agnostic interface, meaning it is just a bunch of classes that can be used on any context. No HTTP, websocket, TCP or any protocol whatsoever should be found on this layer.
+
+When a part of the service layer can be abstracted out as a seperate module, it is encouraged to do so. 
+
+For example the Auth module is a service module but lives in its own project. This could be the case for other useful services like matchmaking or billing.
+
+### WS (Middleware)
+
+Dependencies:
+- Common
+
+A Middleware implementation to abstract out the low level implementation of a web socket server.
+
+It introduces too classes:
+- WSController: Includes methods for listening & emitting web socket events with string payload.
+- WSControllerGeneric: Includes methods for listening & emitting web socket events of a generic type. It is setup with JSON serialization by default, but this can be overriden.
+
+This module should be independent of the application code.
+
+TODO: Find a way to bind the WSConnection with a custom type (IWSConnection, WSConnection<T>).
+TODO: Add to nuget and remove from project.
+
+### Web (MVC)
+
+Dependencies:
+- Model
+- Service
+- WS
+
+Includes the web interface of the application.
+
+This module should delegate method calls from the Service layer based on HTTP requests or web socket messages sent from a client.
+
+Its a dummy module and NO logic should be found on this module.
+
+### Dependencies Overview
+
+|            | Common | Model | Repository | Auth | Service | Web | WS | Client | ConsoleDemo |
+|:-----------|:------:|:-----:|:----------:|:----:|:-------:|:---:|:--:|:------:|:-----------:|
+| Common     |   -    |       |            |      |         |     |    |        |             |
+| Model      |   *    |   -   |            |      |         |     |    |        |             |
+| Repository |   *    |   O   |     -      |      |         |     |    |        |             |
+| Auth       |   *    |       |     O      |  -   |         |     |    |        |             |
+| Service    |   *    |       |     O      |  O   |    -    |     |    |        |             |
+| Web        |   *    |       |            |  O   |    O    |  -  | O  |        |             |
+| WS         |   O    |       |            |      |         |     | -  |        |             |
+| Client     |   O    |   O   |            |      |         |     |    |   -    |             |
+| ConsoleDemo|   O    |   O   |            |      |         |     |    |   O    |     -       |
+
+*Not depencent at the moment, but could be if the module is expanded further.
+
+### Layers Overview
+
+|   Layer    | Common | Model  | Repository | Auth | Service | Web |
+|:-----------|:------:|:------:|:----------:|:----:|:-------:|:---:|
+| Core       |   O    |   O    |            |      |         |     |
+| Database   |        |        |     O      |      |         |     |
+| Service    |        |        |            |  O   |   O     |     |
+| Interface  |        |        |            |      |         |  O  |
