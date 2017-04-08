@@ -111,7 +111,7 @@ Dependencies:
 
 Includes the web interface of the application.
 
-This module should delegate method calls from the Service layer based on HTTP requests or web socket messages sent from a client.
+This module should delegate method calls towards the Service layer based on HTTP requests or web socket messages sent from a client.
 
 Its a dummy module and NO logic should be found on this module.
 
