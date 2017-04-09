@@ -127,7 +127,9 @@ namespace ChatApp.ConsoleDemo {
                     });
                 }
 
-                if (!api.IsAuthenticated) {
+                if (api.IsAuthenticated) {
+                    Console.WriteLine("Welcome " + api.Session.User.Username + ".");
+                }  else {
                     Console.WriteLine("Failed to " + (isRegister ? "register" : "login") + ".");
                     Console.WriteLine("Come on mate, you can do this.");
                 }
